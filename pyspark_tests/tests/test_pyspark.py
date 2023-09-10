@@ -45,7 +45,7 @@ class TestPysparkQueries(unittest.TestCase):
         expected_list = ['V. A.', 'W. W.', 'X. M.', 'Y. T.', 'Z. C.', 'I. M.', 'J. T.', 'K. C.', 'L. A.', 'M. W.',
                          'N. M.', 'O. T.', 'P. C.', 'Q. A.', 'A. A.', 'B. W.', 'C. M.', 'E. T.', 'F. C.', 'G. A.',
                          'H. W.', 'R. W.', 'S. M.', 'T. T.', 'U. C.']
-        for expected, actual in zip(expected_list, [_.initials for _ in df.toLocalIterator()]):
+        for expected, actual in zip(expected_list, (_.initials for _ in df.toLocalIterator())):
             self.assertEqual(expected, actual)
 
     def test_get_initials(self):

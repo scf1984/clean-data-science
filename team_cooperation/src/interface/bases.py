@@ -25,7 +25,6 @@ class Feature(ABC, DataClassSerializer):
 class ModelInterface(ABC):
     @abstractmethod
     def initialize(self, model_parameters: dict):
-        """Initialize and return a model object."""
         ...
 
     @abstractmethod
@@ -44,7 +43,9 @@ class ModelInterface(ABC):
     def load(cls, model_interface_dir_path: Path):
         with open(model_interface_dir_path / 'model_interface_class.json', 'r') as f:
             model_interface_class_name = json.load(f).pop('__type')
+
         model_interface_class = next(filter(lambda x: x.__name__ == model_interface_class_name, cls.__subclasses__()))
         model_interface = model_interface_class()
+
         model_interface.load(model_interface_dir_path)
         return model_interface

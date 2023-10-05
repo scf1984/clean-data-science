@@ -1,4 +1,7 @@
-from team_cooperation.src.base import ModelInterface
+from pathlib import Path
+
+from team_cooperation.src.interface.bases import ModelInterface
+from joblib import dump, load
 
 
 class SKLRFModelInterface(ModelInterface):
@@ -12,8 +15,16 @@ class SKLRFModelInterface(ModelInterface):
         forest = RandomForestClassifier(**model_parameters)
         self.model = MultiOutputClassifier(forest, n_jobs=2)
 
-    def train(self, model, x, y, w=None):
-        return model.fit(x, y, w)
+    def train(self, x, y, w=None):
+        from sklearn.preprocessing import MultiLabelBinarizer
+        y = MultiLabelBinarizer().fit_transform(y)
+        return self.model.fit(x, y)
 
     def predict(self, x):
-        pass
+        return self.model.predict(x)
+
+    def save(self, model_interface_dir_path: Path):
+        dump(self.model, model_interface_dir_path / 'model.pkl')
+
+    def load(self, model_interface_dir_path: Path):
+        self.model = load(model_interface_dir_path / 'model.pkl')
